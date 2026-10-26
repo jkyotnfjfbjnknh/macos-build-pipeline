@@ -1,0 +1,46 @@
+name: pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "probe = 只测 runner 规格；build = 正式打包"
+        type: choice
+        options:
+          - probe
+          - build
+        default: probe
+      game_dir:
+        description: "build 时：甲骨文 /srv/nsp-in 下的游戏文件夹名"
+        required: true
+        default: "Zelda"
+      language:
+        description: "build 时：游戏语言"
+        required: true
+        default: "zh-Hans"
+
+jobs:
+  run:
+    runs-on: macos-26
+    timeout-minutes: 350
+    steps:
+      - name: Fetch pipeline from Oracle and run
+        env:
+          ORACLE_SSH_KEY: ${{ secrets.ORACLE_SSH_KEY }}
+          ORACLE_HOST: ${{ secrets.ORACLE_HOST }}
+          MODE: ${{ inputs.mode }}
+          GAME_DIR: ${{ inputs.game_dir }}
+          LANGUAGE: ${{ inputs.language }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$ORACLE_SSH_KEY" > ~/.ssh/oracle_key
+          chmod 600 ~/.ssh/oracle_key
+          export ORACLE_KEY=~/.ssh/oracle_key
+          scp -i "$ORACLE_KEY" -o StrictHostKeyChecking=accept-new -r \
+            "gha@$ORACLE_HOST:/srv/pipeline" ~/
+          chmod +x ~/pipeline/*.sh
+          if [ "$MODE" = "probe" ]; then
+            ~/pipeline/probe.sh
+          else
+            ~/pipeline/build.sh
+          fi
