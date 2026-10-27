@@ -21,7 +21,7 @@ on:
       game_obj:
         description: "build: object name of the game image in the bucket (used with GAME_URL download)"
         required: false
-        default: "kuangyezhixi[XCI][v1.6.0][01007EF00011E000][v786432](1G+1U+2D).xci"
+        default: "botw.manifest.json"
 
 jobs:
   run:
