@@ -28,6 +28,7 @@ jobs:
         env:
           ORACLE_SSH_KEY: ${{ secrets.ORACLE_SSH_KEY }}
           ORACLE_HOST: ${{ secrets.ORACLE_HOST }}
+          GAME_URL: ${{ secrets.GAME_PAR_URL }}
           MODE: ${{ inputs.mode }}
           GAME_DIR: ${{ inputs.game_dir }}
           LANGUAGE: ${{ inputs.language }}
