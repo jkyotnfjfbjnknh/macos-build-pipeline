@@ -1,0 +1,30 @@
+name: sr-tailscale
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch upstream module
+        run: curl -fsSL --retry 3 -o /tmp/sr_proxy_list.module https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/master/sr_proxy_list.module
+      - name: Convert PROXY to TAILSCALE
+        run: python3 sr-tailscale/convert.py /tmp/sr_proxy_list.module sr-tailscale/sr_tailscale_list.module
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sr-tailscale/sr_tailscale_list.module
+          if git diff --cached --quiet; then
+            echo "no change"
+          else
+            git commit -m "Update tailscale_list module"
+            git push
+          fi
