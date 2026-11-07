@@ -1,7 +1,16 @@
 #!/bin/sh
 mkdir -p /var/lib/tailscale /var/run/tailscale /var/www
-printf 'ok\n' > /var/www/index.html
-httpd -p 8080 -h /var/www &
+cat > /var/www/respond.sh <<'EOS'
+#!/bin/sh
+printf 'HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok'
+EOS
+chmod +x /var/www/respond.sh
+(
+  while true; do
+    nc -lk -p 8080 -e /var/www/respond.sh
+    sleep 1
+  done
+) &
 (
   while true; do
     tailscaled --tun=userspace-networking \
