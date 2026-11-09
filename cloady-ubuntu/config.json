@@ -1,0 +1,10 @@
+{
+  "server": "127.0.0.1",
+  "server_port": 2052,
+  "password": "AdPwPW8j1scCZPap89Zl4Q==",
+  "method": "2022-blake3-aes-128-gcm",
+  "plugin": "v2ray-plugin",
+  "plugin_opts": "server;path=/ws",
+  "mode": "tcp_only",
+  "timeout": 300
+}
