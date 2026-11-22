@@ -8,6 +8,7 @@ RUN mkdir -p /tmp/ssx /tmp/vpx /usr/local/bin \
  && cp /tmp/vpx/v2ray-plugin_linux_amd64 /usr/local/bin/v2ray-plugin \
  && chmod 755 /usr/local/bin/ssserver /usr/local/bin/v2ray-plugin \
  && rm -rf /tmp/ssx /tmp/vpx /tmp/ss.tar.xz /tmp/vp.tar.gz
-COPY config.json /etc/shadowsocks-rust/config.json
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh
 EXPOSE 8080
-CMD ["/usr/local/bin/ssserver", "-c", "/etc/shadowsocks-rust/config.json"]
+CMD ["/usr/local/bin/entrypoint.sh"]
