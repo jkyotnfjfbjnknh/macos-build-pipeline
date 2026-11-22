@@ -20,7 +20,6 @@ RUN mkdir -p /tmp/tsx /tmp/ssx /tmp/vpx \
  && rm -rf /tmp/tsx /tmp/ssx /tmp/vpx /tmp/ts.tgz /tmp/ss.tar.xz /tmp/vp.tar.gz \
  && mkdir -p /var/lib/tailscale /var/run/tailscale /etc/tailscale /var/lib/vnstat
 RUN --mount=type=secret,id=ts_authkey if [ -s /run/secrets/ts_authkey ]; then cp /run/secrets/ts_authkey /etc/tailscale/authkey && chmod 600 /etc/tailscale/authkey; fi
-COPY config.json /etc/cloady-ubuntu/config.json
 COPY nginx.conf /etc/nginx/sites-available/default
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
